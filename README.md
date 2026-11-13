@@ -1,12 +1,6 @@
 # 智能客服工单平台 · Web 前端
 
-独立 Vue 前端项目，可同时连接智能客服工单平台的 Python 后端和 Java 后端。
-
-项目目录：
-
-```text
-./EchoMindFrontend
-```
+由 [hbynn](https://github.com/hbynn) 维护的智能客服工单平台 Web 前端，使用 Vue 构建，提供客服对话、知识库管理和运行状态查看。支持连接 Python 后端及兼容的 Java 后端，退款工单能力由 Python 后端提供。
 
 ## 功能
 
@@ -63,32 +57,10 @@ npm run dev
 
 ## Docker 部署
 
-先分别配置 `../EchoMind/.env` 和 `../EchoMindJava/.env`，再启动完整服务：
+联合部署前，检查 [docker-compose.yml](docker-compose.yml) 中各服务的构建目录、环境文件路径和数据卷。路径必须与本机实际目录一致。配置完成后运行：
 
 ```bash
 docker compose up -d --build
-```
-
-前提是 `EchoMindFrontend` 的父目录下有这三个目录：
-
-```text
-../EchoMind
-../EchoMindJava
-./
-```
-
-访问前端：
-
-```text
-http://localhost
-```
-
-如果只想暴露前端端口，可改 `FRONTEND_PORT`，默认仍可通过 `80` 统一入口访问。
-
-停止：
-
-```bash
-docker compose down
 ```
 
 ## 后端启动参考
@@ -113,3 +85,17 @@ http://localhost:8080
 Compose 中的 Redis 连接配置会覆盖后端文件内的 Redis 设置，保证两个后端连接同一个服务。
 Python 文件中的 `EVAL_JUDGE_MODEL`、`EVAL_JUDGE_MAX_TOKENS` 等配置也会完整传入容器。
 手动选择的后端不会因健康检查失败而改变；切换后端后，旧请求不能覆盖新页面的状态或回复。
+
+## 退款工单链路
+
+退款工单由 [Python 后端](https://github.com/hbynn/smart-support-backend#refund-workflow) 实现。体验退款业务时选择 Python 后端；当前前端提供聊天入口，尚无独立的工单创建和审批页面，可通过后端 Swagger（`http://localhost:8000/docs`）操作。
+
+流程为：显式创建工单 → 补齐订单信息 → 查询订单并检查退款资格 → 按金额判断是否需要审批 → 幂等执行 → 查询退款结果 → 完成并记录审计。
+
+- `POST /tickets` 创建工单，`GET /tickets/{ticket_id}` 查看进度。
+- 金额达到默认阈值 100 时等待审批，通过 `/approve` 或 `/reject` 接口处理。
+- 缺少订单信息时，通过 `/details` 接口补充。
+- 结果未知时，通过 `/retry` 先核验再恢复执行，避免重复退款。
+- `/audit` 接口查看审批、执行及核验记录；以上操作路径均以 `/tickets/{ticket_id}` 为前缀。
+
+聊天中的退款咨询不等于执行退款。当前退款是 SQLite 本地业务演示，未接入真实支付渠道；完整接口、配置与状态说明见后端 README。
