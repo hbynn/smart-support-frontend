@@ -1,6 +1,6 @@
-# EchoMind Frontend
+# 智能客服工单平台 · Web 前端
 
-独立 Vue 前端项目，可同时连接 EchoMind Python 版本和 EchoMind Java 版本。
+独立 Vue 前端项目，可同时连接智能客服工单平台的 Python 后端和 Java 后端。
 
 项目目录：
 

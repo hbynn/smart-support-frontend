@@ -1,9 +1,9 @@
 <template>
   <div class="app-shell" :class="`view-${activeView}`">
     <aside class="navigation-rail" aria-label="主导航">
-      <a class="brand" href="#" @click.prevent="activeView = 'chat'" aria-label="EchoMind 首页">
+      <a class="brand" href="#" @click.prevent="activeView = 'chat'" aria-label="智能客服工单平台 首页">
         <span class="brand-mark">E</span>
-        <span class="brand-name">EchoMind</span>
+        <span class="brand-name">智能客服工单平台</span>
       </a>
       <button class="new-chat-button" @click="activeView = 'chat'; clearConversation()">
         <AppIcon name="plus" />
@@ -47,9 +47,9 @@
           <AppIcon name="chevron" />
           <strong>{{ currentView.label }}</strong>
         </div>
-        <a class="mobile-brand" href="#" @click.prevent="activeView = 'chat'" aria-label="EchoMind 首页">
+        <a class="mobile-brand" href="#" @click.prevent="activeView = 'chat'" aria-label="智能客服工单平台 首页">
           <span class="brand-mark">E</span>
-          <span>EchoMind</span>
+          <span>智能客服工单平台</span>
         </a>
         <div class="topbar-tools">
           <span class="connection-status" :title="statusText || healthLabel">
@@ -105,7 +105,7 @@
                   <span v-if="item.role === 'assistant'" class="message-avatar">E</span>
                   <div class="message-content">
                     <div class="message-meta">
-                      <strong>{{ item.role === 'user' ? '你' : 'EchoMind' }}</strong>
+                      <strong>{{ item.role === 'user' ? '你' : '智能客服工单平台' }}</strong>
                       <span v-if="item.error" class="error-label">请求失败</span>
                       <small v-else-if="item.role === 'assistant'">{{ currentBackend.label }} Agent</small>
                     </div>
